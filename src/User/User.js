@@ -1,5 +1,6 @@
 import v from 'yup';
 import bcrypt from 'bcrypt-node';
+import uuid from 'uuid/v1';
 
 const schema = v.object().shape({
     email : v.string().email().required(),
@@ -50,6 +51,17 @@ class User {
                 resolve(result);
             })
         })
+    }
+    generateResetToken() {
+        this.token = uuid();
+        return Promise.resolve(this);
+    }
+    toObject() {
+        let userObject = {};
+        ["id", "email", "firstName", "lastName"].forEach((key) => {
+            return userObject[key] = this[key];
+        })
+        return userObject;
     }
 }
 

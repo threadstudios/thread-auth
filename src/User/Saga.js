@@ -4,12 +4,12 @@ export function register(userData, password, userRepository, userMapper) {
 
     const user = new User(userData);
 
-    return Promise.all(
+    return Promise.all([
         user.isValid(),
         userRepository.getByEmail(user.email),
         user.setPassword(password)
-    ).then((results) => {
-        const [valid, existingUser, userHash ] = results;
+    ]).then((results) => {
+        const [ valid, existingUser, userHash ] = results;
         if(valid && !existingUser.id && userHash) {
             return userMapper.save(user);
         } else {
@@ -20,11 +20,82 @@ export function register(userData, password, userRepository, userMapper) {
             })
         }
     })
-    .then((newUser) => {
-        return Promise.resolve(newUser.toObject())
+    .then((saveResult) => {
+        return Promise.resolve(saveResult.record.toObject())
     })
     .catch((err) => {
-        return Promise.reject(err);
+        return Promise.reject({
+            code : 'USR002', 
+            message : 'User could not be saved', 
+            core : err
+        });
     })
-    
+
+}
+
+export function completeReset(token, newPassword, userRepo, userMapper) {
+    return userRepo.getByToken(token)
+    .then((results) => {
+        if(!results.length) {
+            return Promise.reject({
+                code: 'USR006',
+                message: 'This token is invalid or has expired'
+            })
+        }
+        const [ user ] = results;
+        return user.setPassword(newPassword)
+    })
+    .then((user) => {
+        return userMapper.save(user);
+    }).then((saveResult) => {
+        return Promise.resolve(saveResult.record.toObject());
+    })
+}
+
+export function initiateReset(email, userRepo, userMapper) {
+    return userRepo.getByEmail(email)
+    .then((results) => {
+        if(!results.length) {
+            return Promise.reject({
+                code: 'USR005',
+                message: 'Please check the credentials you supplied'
+            })
+        }
+        const [ user ] = results;
+        return user.generateResetToken()
+    })
+    .then((user) => {
+        return userMapper.save(user)
+    })
+    .then((saveResult) => {
+        return Promise.resolve(saveResult.record.token)
+    });
+}
+
+export function login(email, password, userRepo, userMapper) {
+    let user;
+
+    return userRepo.getByEmail(email)
+    .then((results) => {
+        if(!results.length) {
+            return Promise.reject({
+                code : 'USR003',
+                message: 'Please check your credentials'
+            })
+        }
+        const [ userData ] = results;
+        user = userData;
+        return user.checkPassword(password);
+    })
+    .then((passwordCorrect) => {
+        if(!passwordCorrect) {
+            return Promise.reject({
+                code : 'USR004',
+                message: 'Please check your credentials'
+            })
+        }
+        user.lastAuth = (new Date()).toISOString();
+        return userMapper.save(user);
+    });
+
 }

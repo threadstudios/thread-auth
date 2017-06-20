@@ -14,6 +14,10 @@ var _bcryptNode = require('bcrypt-node');
 
 var _bcryptNode2 = _interopRequireDefault(_bcryptNode);
 
+var _v = require('uuid/v1');
+
+var _v2 = _interopRequireDefault(_v);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -76,6 +80,23 @@ var User = function () {
                     resolve(result);
                 });
             });
+        }
+    }, {
+        key: 'generateResetToken',
+        value: function generateResetToken() {
+            this.token = (0, _v2.default)();
+            return Promise.resolve(this);
+        }
+    }, {
+        key: 'toObject',
+        value: function toObject() {
+            var _this4 = this;
+
+            var userObject = {};
+            ["id", "email", "firstName", "lastName"].forEach(function (key) {
+                return userObject[key] = _this4[key];
+            });
+            return userObject;
         }
     }]);
 

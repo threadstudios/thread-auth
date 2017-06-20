@@ -19,6 +19,11 @@ class UserRepository {
             { type : '=', field : 'email', value : email }
         ])
     }
+    getByToken(token) {
+        return this.query([
+            { type: '=', field : 'token', value: token }
+        ])
+    }
 }
 
 export default UserRepository
