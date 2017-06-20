@@ -36,13 +36,14 @@ describe("A User", () => {
         });
     });
 
-    it("should allow for a password to be checked for validity", () => {
-        Promise.all(
+    it("should allow for a password to be checked for validity", (done) => {
+        Promise.all([
             dummyUser.checkPassword('Blah'), 
             dummyUser.checkPassword('cakeIsALie')
-        ).then((results) => {
+        ]).then((results) => {
             expect(results[0]).toBeFalsy();
             expect(results[1]).toBe(true);
+            done();
         })
     });
 
