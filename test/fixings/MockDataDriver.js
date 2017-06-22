@@ -2,17 +2,6 @@ const operations = {
     '=' : (a, b) => { return a === b }
 }
 
-const performQuery = (queries, entity) => {
-    let match = true;
-    queries.forEach((q) => {
-        const result = operations[q.type](entity[q.field], q.value);
-        if(result === false) {
-            match = false;
-        }
-    });
-    return match;
-}
-
 export default class mockDataDriver {
     constructor() {
         this.data = [];
@@ -55,12 +44,12 @@ export default class mockDataDriver {
     getAll(context) {
         return Promise.resolve(this.getContext(context).data);
     }
-    query(context, queries) {
+    getBy(context, field, value) {
         return new Promise((resolve, reject) => {
             this.getAll(context)
             .then((entities) => {
                 const results = entities.filter((entity) => {
-                    return performQuery(queries, entity);
+                    return entity[field] === value
                 });
                 return resolve(results);
             });

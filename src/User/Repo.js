@@ -3,26 +3,20 @@ class UserRepository {
         this.driver = storageDriver;
         this.context = 'user';
     }
-    query(params) {
-        return this.driver.query(this.context, params)
+    getBy(field, value) {
+        return this.driver.getBy(this.context, field, value)
     }
     getAll() {
         return this.driver.getAll(this.context)
     }
     getById(id) {
-        return this.query([
-            { type : '=', field : 'id', value : id }
-        ])
+        return this.getBy('id', id);
     }
     getByEmail(email) {
-        return this.query([
-            { type : '=', field : 'email', value : email }
-        ])
+        return this.getBy('email', email);
     }
     getByToken(token) {
-        return this.query([
-            { type: '=', field : 'token', value: token }
-        ])
+        return this.getBy('token', token);
     }
 }
 
