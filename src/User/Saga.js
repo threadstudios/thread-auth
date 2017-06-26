@@ -10,7 +10,7 @@ export function register(userData, password, userRepository, userMapper) {
         user.setPassword(password)
     ]).then((results) => {
         const [ valid, existingUser, userHash ] = results;
-        if(valid && !existingUser.state && userHash) {
+        if(valid && !existingUser.record && userHash) {
             return userMapper.save(user);
         } else {
             return Promise.reject({
