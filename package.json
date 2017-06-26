@@ -21,7 +21,7 @@
     "build"
   ],
   "name": "thread-auth",
-  "version": "0.2.6",
+  "version": "0.3.0",
   "description": "Basic auth mechanics",
   "main": "index.js",
   "repository": "git@github.com:threadstudios/thread-auth.git",
