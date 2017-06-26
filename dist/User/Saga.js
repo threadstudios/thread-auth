@@ -27,7 +27,7 @@ function register(userData, password, userRepository, userMapper) {
             existingUser = _results[1],
             userHash = _results[2];
 
-        if (valid && !existingUser.id && userHash) {
+        if (valid && !existingUser.state && userHash) {
             return userMapper.save(user);
         } else {
             return Promise.reject({
