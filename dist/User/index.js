@@ -17,6 +17,10 @@ var _User = require('./User.js');
 
 var _User2 = _interopRequireDefault(_User);
 
+var _Saga = require('./Saga');
+
+var _Saga2 = _interopRequireDefault(_Saga);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 exports.default = {
