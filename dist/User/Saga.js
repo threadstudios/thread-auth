@@ -27,13 +27,13 @@ function register(userData, password, userRepository, userMapper) {
             existingUser = _results[1],
             userHash = _results[2];
 
-        if (valid && !existingUser.record && userHash) {
+        if (valid && !existingUser.record.id && userHash) {
             return userMapper.save(user);
         } else {
             return Promise.reject({
                 code: 'USR001',
                 message: 'User is not valid',
-                results: { valid: valid, existingUser: existingUser.id }
+                results: { valid: valid, existingUser: existingUser.record.id }
             });
         }
     }).then(function (saveResult) {
