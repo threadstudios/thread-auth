@@ -2495,9 +2495,9 @@ test-exclude@^4.1.1:
     read-pkg-up "^1.0.1"
     require-main-filename "^1.0.1"
 
-"thread-utils@https://github.com/threadstudios/thread-utils":
+thread-utils@^0.1.0:
   version "0.1.0"
-  resolved "https://github.com/threadstudios/thread-utils#ffcd765d16dacab0467778e83d097cbae7664ce1"
+  resolved "https://registry.yarnpkg.com/thread-utils/-/thread-utils-0.1.0.tgz#f9dca49ea6c580f92d97e6818e5ae03d048eb74e"
 
 throat@^3.0.0:
   version "3.2.0"

@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "bcrypt-node": "^0.1.0",
-    "thread-utils": "https://github.com/threadstudios/thread-utils",
+    "thread-utils": "^0.1.0",
     "uuid": "^3.1.0",
     "yup": "^0.21.3"
   },
