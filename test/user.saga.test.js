@@ -19,7 +19,7 @@ describe("User Sagas", () => {
             done();
         });
     })
-
+    
     it("should allow me to login", (done) => {
 
         login("paul@example.com", "cake", repo, mapper)
@@ -27,10 +27,12 @@ describe("User Sagas", () => {
             expect(result.state).toBe(true);
             expect(result.record.lastAuth).toBeDefined();
             done();
+        }).catch((err) => {
+            console.log(err);
         });
 
     });
-
+    
     it("should fail nicely if login fails", (done) => {
 
         login("paul@example1.com", "cake", repo, mapper)
@@ -69,6 +71,9 @@ describe("User Sagas", () => {
         .then((result) => {
             expect(result.firstName).toBe("Paul")
             done();
+        }).catch((err) => {
+            console.log(err);
+            done();
         });
     });
 
@@ -80,7 +85,6 @@ describe("User Sagas", () => {
             done();
         });
     });
-
 
 
 });

@@ -11,31 +11,32 @@ export default class mockDataDriver {
     }
     create(context, value) {
         let store = this.getContext(context);
-        value.id = store.aiCount;
-        store.data.push(value);
+        value.setId(store.aiCount);
+
+        const newValue = Object.assign(value.get(), {id : value.getId()});
+        store.data.push(newValue);
         store.aiCount++;
         this.data[context] = store; 
-        return Promise.resolve({state : 1, record : value});
+        return Promise.resolve({state : 1, record : newValue});
     }
     update(context, value) {
         let store = this.getContext(context);
         let updated;
-
         store.data.forEach((entity) => {
-            if(entity.id === value.id) {
-                entity = Object.assign(entity, value);
+            if(entity.id === value.getId()) {
+                entity = Object.assign(entity, value.get());
                 updated = entity;
             }
             return entity;
         });
         
         return Promise.resolve({
-            state : !isNaN(updated.id),
+            state : updated.id !== false,
             record : updated
         });
     }
     delete(context, value) {
-        value.deleted = true;
+        value.set({'deleted' : true});
         this.update(context, value);
         return Promise.resolve({
             state : 1

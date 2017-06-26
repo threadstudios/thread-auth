@@ -2,6 +2,7 @@
   "devDependencies": {
     "babel-cli": "^6.24.1",
     "babel-jest": "^20.0.3",
+    "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-preset-es2015": "^6.24.1",
     "jest": "^20.0.4"
   },
@@ -11,6 +12,7 @@
   },
   "dependencies": {
     "bcrypt-node": "^0.1.0",
+    "thread-utils": "https://github.com/threadstudios/thread-utils",
     "uuid": "^3.1.0",
     "yup": "^0.21.3"
   },

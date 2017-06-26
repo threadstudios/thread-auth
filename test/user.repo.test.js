@@ -20,11 +20,14 @@ describe("A User repository", () => {
         }]
 
         const promises = users.map((user) => {
+            user = User.create(user);
             return mapper.save(user);
         });
 
         Promise.all(promises).then((results) => {
             done();
+        }).catch((err) => {
+            console.log(err);
         });
 
     });

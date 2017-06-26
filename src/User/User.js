@@ -1,67 +1,43 @@
 import v from 'yup';
 import bcrypt from 'bcrypt-node';
 import uuid from 'uuid/v1';
+import { Model } from 'thread-utils';
 
 const schema = v.object().shape({
     email : v.string().email().required(),
 });
 
-const fields = [
-    "id", 
-    "email", 
-    "hash", 
-    "lastAuth", 
-    "deleted", 
-    "firstName", 
-    "lastName", 
-    "token", 
-    "state"
-];
-
-class User {
-    constructor(record) {
-        if(record) this.fromData(record);
-    }
-    fromData(data) {
-        Object.keys(data).forEach((key) => {
-            if(fields.includes(key)){
-                this[key] = data[key];
-            }
-        });
+class User extends Model {
+    static fields = ["email", "hash", "lastAuth", "deleted", "firstName", "lastName", "token", "state"];
+    constructor() {
+        super(User);
     }
     exists() {
-        return (this.id);
+        return (this.getId());
     }
     isValid() {
-        return schema.isValid(this);
+        return schema.isValid(this.get());
     }
     setPassword(password) {
         return new Promise((resolve, reject) => {
             bcrypt.hash(password, null, null, (err, hash) => {
                 if(err) reject(err);
-                this.hash = hash;
+                this.set({hash : hash});
                 resolve(this);
             })
         })
     }
     checkPassword(submitted) {
         return new Promise((resolve, reject) => {
-            bcrypt.compare(submitted, this.hash, (err, result) => {
+            bcrypt.compare(submitted, this.get('hash'), (err, result) => {
                 if(err) reject(err);
                 resolve(result);
             })
         })
     }
     generateResetToken() {
-        this.token = uuid();
+        this.set({token : uuid()});
         return Promise.resolve(this);
-    }
-    toObject() {
-        let userObject = {};
-        ["id", "email", "firstName", "lastName"].forEach((key) => {
-            return userObject[key] = this[key];
-        })
-        return userObject;
     }
 }
 

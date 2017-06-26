@@ -2,11 +2,11 @@ import User from './User';
 
 export function register(userData, password, userRepository, userMapper) {
 
-    const user = new User(userData);
+    const user = User.create(userData);
 
     return Promise.all([
         user.isValid(),
-        userRepository.getByEmail(user.email),
+        userRepository.getByEmail(user.get('email')),
         user.setPassword(password)
     ]).then((results) => {
         const [ valid, existingUser, userHash ] = results;
@@ -21,7 +21,7 @@ export function register(userData, password, userRepository, userMapper) {
         }
     })
     .then((saveResult) => {
-        return Promise.resolve(saveResult.record.toObject())
+        return Promise.resolve(saveResult.record);
     })
     .catch((err) => {
         return Promise.reject({
@@ -42,13 +42,14 @@ export function completeReset(token, newPassword, userRepo, userMapper) {
                 message: 'This token is invalid or has expired'
             })
         }
-        const [ user ] = results;
+        const [ userData ] = results;
+        const user = User.create(userData)
         return user.setPassword(newPassword)
     })
     .then((user) => {
         return userMapper.save(user);
     }).then((saveResult) => {
-        return Promise.resolve(saveResult.record.toObject());
+        return Promise.resolve(saveResult.record);
     })
 }
 
@@ -61,7 +62,8 @@ export function initiateReset(email, userRepo, userMapper) {
                 message: 'Please check the credentials you supplied'
             })
         }
-        const [ user ] = results;
+        const [ userData ] = results;
+        const user = User.create(userData);
         return user.generateResetToken()
     })
     .then((user) => {
@@ -83,8 +85,10 @@ export function login(email, password, userRepo, userMapper) {
                 message: 'Please check your credentials'
             })
         }
+
         const [ userData ] = results;
-        user = userData;
+        user = User.create(userData);
+
         return user.checkPassword(password);
     })
     .then((passwordCorrect) => {
@@ -94,7 +98,7 @@ export function login(email, password, userRepo, userMapper) {
                 message: 'Please check your credentials'
             })
         }
-        user.lastAuth = (new Date()).toISOString();
+        user.set({lastAuth : (new Date()).toISOString()});
         return userMapper.save(user);
     });
 
