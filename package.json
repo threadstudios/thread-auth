@@ -16,6 +16,9 @@
     "uuid": "^3.1.0",
     "yup": "^0.21.3"
   },
+  "pre-commit": [
+    "build"
+  ],
   "name": "thread-auth",
   "version": "0.2.6",
   "description": "Basic auth mechanics",
