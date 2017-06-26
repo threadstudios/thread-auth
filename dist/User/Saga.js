@@ -117,3 +117,10 @@ function login(email, password, userRepo, userMapper) {
         return userMapper.save(user);
     });
 }
+
+exports.default = {
+    register: register,
+    completeReset: completeReset,
+    login: login,
+    initiateReset: initiateReset
+};

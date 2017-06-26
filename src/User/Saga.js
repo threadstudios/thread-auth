@@ -103,3 +103,10 @@ export function login(email, password, userRepo, userMapper) {
     });
 
 }
+
+export default {
+    register,
+    completeReset,
+    login,
+    initiateReset
+}
