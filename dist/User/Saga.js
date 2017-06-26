@@ -19,9 +19,9 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function register(userData, password, userRepository, userMapper) {
 
-    var user = new _User2.default(userData);
+    var user = _User2.default.create(userData);
 
-    return Promise.all([user.isValid(), userRepository.getByEmail(user.email), user.setPassword(password)]).then(function (results) {
+    return Promise.all([user.isValid(), userRepository.getByEmail(user.get('email')), user.setPassword(password)]).then(function (results) {
         var _results = _slicedToArray(results, 3),
             valid = _results[0],
             existingUser = _results[1],
@@ -37,7 +37,7 @@ function register(userData, password, userRepository, userMapper) {
             });
         }
     }).then(function (saveResult) {
-        return Promise.resolve(saveResult.record.toObject());
+        return Promise.resolve(saveResult.record);
     }).catch(function (err) {
         return Promise.reject({
             code: 'USR002',
@@ -57,13 +57,14 @@ function completeReset(token, newPassword, userRepo, userMapper) {
         }
 
         var _results2 = _slicedToArray(results, 1),
-            user = _results2[0];
+            userData = _results2[0];
 
+        var user = _User2.default.create(userData);
         return user.setPassword(newPassword);
     }).then(function (user) {
         return userMapper.save(user);
     }).then(function (saveResult) {
-        return Promise.resolve(saveResult.record.toObject());
+        return Promise.resolve(saveResult.record);
     });
 }
 
@@ -77,8 +78,9 @@ function initiateReset(email, userRepo, userMapper) {
         }
 
         var _results3 = _slicedToArray(results, 1),
-            user = _results3[0];
+            userData = _results3[0];
 
+        var user = _User2.default.create(userData);
         return user.generateResetToken();
     }).then(function (user) {
         return userMapper.save(user);
@@ -101,7 +103,8 @@ function login(email, password, userRepo, userMapper) {
         var _results4 = _slicedToArray(results, 1),
             userData = _results4[0];
 
-        user = userData;
+        user = _User2.default.create(userData);
+
         return user.checkPassword(password);
     }).then(function (passwordCorrect) {
         if (!passwordCorrect) {
@@ -110,7 +113,7 @@ function login(email, password, userRepo, userMapper) {
                 message: 'Please check your credentials'
             });
         }
-        user.lastAuth = new Date().toISOString();
+        user.set({ lastAuth: new Date().toISOString() });
         return userMapper.save(user);
     });
 }

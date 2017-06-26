@@ -18,43 +18,38 @@ var _v = require('uuid/v1');
 
 var _v2 = _interopRequireDefault(_v);
 
+var _threadUtils = require('thread-utils');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var schema = _yup2.default.object().shape({
     email: _yup2.default.string().email().required()
 });
 
-var fields = ["id", "email", "hash", "lastAuth", "deleted", "firstName", "lastName", "token", "state"];
+var User = function (_Model) {
+    _inherits(User, _Model);
 
-var User = function () {
-    function User(record) {
+    function User() {
         _classCallCheck(this, User);
 
-        if (record) this.fromData(record);
+        return _possibleConstructorReturn(this, (User.__proto__ || Object.getPrototypeOf(User)).call(this, User));
     }
 
     _createClass(User, [{
-        key: 'fromData',
-        value: function fromData(data) {
-            var _this = this;
-
-            Object.keys(data).forEach(function (key) {
-                if (fields.includes(key)) {
-                    _this[key] = data[key];
-                }
-            });
-        }
-    }, {
         key: 'exists',
         value: function exists() {
-            return this.id;
+            return this.getId();
         }
     }, {
         key: 'isValid',
         value: function isValid() {
-            return schema.isValid(this);
+            return schema.isValid(this.get());
         }
     }, {
         key: 'setPassword',
@@ -64,7 +59,7 @@ var User = function () {
             return new Promise(function (resolve, reject) {
                 _bcryptNode2.default.hash(password, null, null, function (err, hash) {
                     if (err) reject(err);
-                    _this2.hash = hash;
+                    _this2.set({ hash: hash });
                     resolve(_this2);
                 });
             });
@@ -75,7 +70,7 @@ var User = function () {
             var _this3 = this;
 
             return new Promise(function (resolve, reject) {
-                _bcryptNode2.default.compare(submitted, _this3.hash, function (err, result) {
+                _bcryptNode2.default.compare(submitted, _this3.get('hash'), function (err, result) {
                     if (err) reject(err);
                     resolve(result);
                 });
@@ -84,23 +79,13 @@ var User = function () {
     }, {
         key: 'generateResetToken',
         value: function generateResetToken() {
-            this.token = (0, _v2.default)();
+            this.set({ token: (0, _v2.default)() });
             return Promise.resolve(this);
-        }
-    }, {
-        key: 'toObject',
-        value: function toObject() {
-            var _this4 = this;
-
-            var userObject = {};
-            ["id", "email", "firstName", "lastName"].forEach(function (key) {
-                return userObject[key] = _this4[key];
-            });
-            return userObject;
         }
     }]);
 
     return User;
-}();
+}(_threadUtils.Model);
 
+User.fields = ["email", "hash", "lastAuth", "deleted", "firstName", "lastName", "token", "state"];
 exports.default = User;

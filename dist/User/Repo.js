@@ -17,9 +17,9 @@ var UserRepository = function () {
     }
 
     _createClass(UserRepository, [{
-        key: 'query',
-        value: function query(params) {
-            return this.driver.query(this.context, params);
+        key: 'getBy',
+        value: function getBy(field, value) {
+            return this.driver.getBy(this.context, field, value);
         }
     }, {
         key: 'getAll',
@@ -29,17 +29,17 @@ var UserRepository = function () {
     }, {
         key: 'getById',
         value: function getById(id) {
-            return this.query([{ type: '=', field: 'id', value: id }]);
+            return this.getBy('id', id);
         }
     }, {
         key: 'getByEmail',
         value: function getByEmail(email) {
-            return this.query([{ type: '=', field: 'email', value: email }]);
+            return this.getBy('email', email);
         }
     }, {
         key: 'getByToken',
         value: function getByToken(token) {
-            return this.query([{ type: '=', field: 'token', value: token }]);
+            return this.getBy('token', token);
         }
     }]);
 

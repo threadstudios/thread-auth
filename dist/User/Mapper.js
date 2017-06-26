@@ -19,7 +19,7 @@ var UserDataMapper = function () {
     _createClass(UserDataMapper, [{
         key: 'save',
         value: function save(user) {
-            if (isNaN(user.id)) {
+            if (user.getId() === false) {
                 return this.driver.create(this.context, user);
             } else {
                 return this.driver.update(this.context, user);
@@ -28,7 +28,7 @@ var UserDataMapper = function () {
     }, {
         key: 'delete',
         value: function _delete(user) {
-            if (!isNaN(user.id)) {
+            if (user.getId() !== false) {
                 return this.driver.delete(this.context, user);
             }
         }

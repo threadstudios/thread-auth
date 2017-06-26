@@ -19,6 +19,9 @@ var _User2 = _interopRequireDefault(_User);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+exports.default = {
+    User: _User2.default, Repo: _Repo2.default, Mapper: _Mapper2.default
+};
 exports.User = _User2.default;
 exports.Repo = _Repo2.default;
 exports.Mapper = _Mapper2.default;
